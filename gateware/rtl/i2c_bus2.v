@@ -211,7 +211,7 @@ always @* begin
           end
 
 `ifdef AK4951
-          // AK4951 speaker on/off setting update
+          // AK4951 音频编解码器 speaker on/off setting update
           if (cmd_data[11] != ak4951_spon_reg) begin
             // Must send
             if (~busy) begin
@@ -229,7 +229,7 @@ always @* begin
         end
 
 `ifdef AK4951
-        // AK4951 mic boost setting update
+        // AK4951 音频编解码器 mic boost setting update
         if (cmd_addr == 6'h09) begin
           if (cmd_data[16] != ak4951_micboost_reg) begin
             // Must send

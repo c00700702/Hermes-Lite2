@@ -21,13 +21,13 @@
 // the Hermes-Lite hardware described at http://github.com/softerhardware/Hermes-Lite2.
 
 module hermeslite (
-  // Power
+  // 电源控制
   output       pwr_clk3p3           ,
   output       pwr_clk1p2           ,
   output       pwr_envpa            ,
   output       pwr_envop            ,
   output       pwr_envbias          ,
-  // Ethernet PHY
+  // 以太网 PHY
   input        phy_clk125           ,
   output [3:0] phy_tx               ,
   output       phy_tx_en            ,
@@ -38,11 +38,11 @@ module hermeslite (
   input        phy_rst_n            ,
   inout        phy_mdio             ,
   output       phy_mdc              ,
-  // Clock
-  output       io_db1_1             , // AK4951 Companion Board V4 ATU ; ATU START
+  // 时钟接口
+  output       io_db1_1             , // AK4951 音频编解码器 Companion Board V4 ATU ; ATU START
   inout        clk_sda1             ,
   inout        clk_scl1             ,
-  // RF Frontend
+  // 射频前端
   output       rffe_ad9866_rst_n    ,
   output [5:0] rffe_ad9866_tx       ,
   input  [5:0] rffe_ad9866_rx       ,
@@ -57,13 +57,13 @@ module hermeslite (
   output       rffe_rfsw_sel        ,
   output       rffe_ad9866_mode     ,
   output       rffe_ad9866_pga5     ,
-  // IO
+  // 输入输出接口
   output       io_led_d2            ,
   output       io_led_d3            ,
   output       io_led_d4            ,
   output       io_led_d5            ,
   //
-  input  [1:0] io_link_rx           , // AK4951 Companion Board V4 ATU ; [1] ATU KEY(STATUS)
+  input  [1:0] io_link_rx           , // AK4951 音频编解码器 Companion Board V4 ATU ; [1] ATU KEY(STATUS)
   output [1:0] io_link_tx           ,
   //
   input        io_cn8               ,
@@ -75,11 +75,11 @@ module hermeslite (
   inout        io_scl2              ,
   inout        io_sda2              ,
   //
-  output       io_db1_2             , // AK4951 Companion Board V3
-  output       io_db1_3             , // AK4951 Companion Board V3
-  input        io_db1_4             , // AK4951 Companion Board V3
-  output       io_db1_5             , // AK4951 Companion Board V3
-  output       io_db1_6             , // AK4951 Companion Board V3
+  output       io_db1_2             , // AK4951 音频编解码器 Companion Board V3
+  output       io_db1_3             , // AK4951 音频编解码器 Companion Board V3
+  input        io_db1_4             , // AK4951 音频编解码器 Companion Board V3
+  output       io_db1_5             , // AK4951 音频编解码器 Companion Board V3
+  output       io_db1_6             , // AK4951 音频编解码器 Companion Board V3
   input        io_phone_tip         ,
   input        io_phone_ring        ,
   input        io_tp2               ,
@@ -91,8 +91,8 @@ module hermeslite (
   output       pa_exttr
 );
 
-wire    io_atu_req;                // AK4951 Companion Board V4 ATU
-assign  io_db1_1   = ~io_atu_req;  // AK4951 Companion Board V4 ATU
+wire    io_atu_req;                // AK4951 音频编解码器 Companion Board V4 ATU
+assign  io_db1_1   = ~io_atu_req;  // AK4951 音频编解码器 Companion Board V4 ATU
 
   hermeslite_core #(
     .BOARD   (5                                    ),
@@ -101,7 +101,7 @@ assign  io_db1_1   = ~io_atu_req;  // AK4951 Companion Board V4 ATU
     .NR      (4                                    ),
     .NT      (1                                    ),
     .UART    (1                                    ),
-    .ATU     (1                                    ), // AK4951 Companion Board V4 ATU
+    .ATU     (1                                    ), // AK4951 音频编解码器 Companion Board V4 ATU
     .FAN     (0                                    ),
     .PSSYNC  (1                                    ),
     .CW      (2                                    ), // CW_OPENHPSDR
@@ -146,7 +146,7 @@ assign  io_db1_1   = ~io_atu_req;  // AK4951 Companion Board V4 ATU
     .io_led_tx                 (io_led_d3            ),
     .io_led_adc75              (io_led_d4            ),
     .io_led_adc100             (io_led_d5            ),
-    .io_tx_envelope_pwm_out    (                     ), // AK4951 Companion Board V4 ATU
+    .io_tx_envelope_pwm_out    (                     ), // AK4951 音频编解码器 Companion Board V4 ATU
     .io_tx_envelope_pwm_out_inv(                     ),
     .io_tx_inhibit             (io_cn8               ),
     .io_id_hermeslite          (io_cn9               ),
@@ -155,24 +155,24 @@ assign  io_db1_1   = ~io_atu_req;  // AK4951 Companion Board V4 ATU
     .io_adc_sda                (io_adc_sda           ),
     .io_scl2                   (io_scl2              ),
     .io_sda2                   (io_sda2              ),
-    .io_uart_txd               (io_db1_3             ), // AK4951 Companion Board V3
+    .io_uart_txd               (io_db1_3             ), // AK4951 音频编解码器 Companion Board V3
     .io_uart_rxd               (1'b0                 ),
     .io_cw_keydown             (                     ),
     .io_phone_tip              (io_phone_tip         ),
     .io_phone_ring             (io_phone_ring        ),
-    .io_atu_ack                (~io_link_rx[1]       ), // AK4951 Companion Board V4 ATU
-    .io_atu_req                (io_atu_req           ), // AK4951 Companion Board V4 ATU
+    .io_atu_ack                (~io_link_rx[1]       ), // AK4951 音频编解码器 Companion Board V4 ATU
+    .io_atu_req                (io_atu_req           ), // AK4951 音频编解码器 Companion Board V4 ATU
     .pa_inttr                  (pa_inttr             ),
     .pa_exttr                  (pa_exttr             ),
     .fan_pwm                   (                     ),
 
-    .pa_exttr_clone            (io_db1_5             ), // AK4951 Companion Board V3
-    .io_ptt_in                 (io_db1_4             ), // AK4951 Companion Board V3
-    .i2s_pdn                   (io_db1_6             ), // AK4951 Companion Board V3
-    .i2s_bck                   (io_link_tx[0]        ), // AK4951 Companion Board V3
-    .i2s_lrck                  (io_link_tx[1]        ), // AK4951 Companion Board V3
-    .i2s_miso                  (io_link_rx[0]        ), // AK4951 Companion Board V3
-    .i2s_mosi                  (io_db1_2             )  // AK4951 Companion Board V3
+    .pa_exttr_clone            (io_db1_5             ), // AK4951 音频编解码器 Companion Board V3
+    .io_ptt_in                 (io_db1_4             ), // AK4951 音频编解码器 Companion Board V3
+    .i2s_pdn                   (io_db1_6             ), // AK4951 音频编解码器 Companion Board V3
+    .i2s_bck                   (io_link_tx[0]        ), // AK4951 音频编解码器 Companion Board V3
+    .i2s_lrck                  (io_link_tx[1]        ), // AK4951 音频编解码器 Companion Board V3
+    .i2s_miso                  (io_link_rx[0]        ), // AK4951 音频编解码器 Companion Board V3
+    .i2s_mosi                  (io_db1_2             )  // AK4951 音频编解码器 Companion Board V3
   );
 
 endmodule

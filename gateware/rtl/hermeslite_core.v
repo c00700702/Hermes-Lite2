@@ -21,13 +21,13 @@
 // the Hermes-Lite hardware described at http://github.com/softerhardware/Hermes-Lite2.
 
 module hermeslite_core (
-  // Power
+// 电源控制
   output       pwr_clk3p3                ,
   output       pwr_clk1p2                ,
   output       pwr_envpa                 ,
   output       pwr_envop                 ,
   output       pwr_envbias               ,
-  // Ethernet PHY
+// 以太网 PHY
   input        phy_clk125                ,
   output [3:0] phy_tx                    ,
   output       phy_tx_en                 ,
@@ -38,10 +38,10 @@ module hermeslite_core (
   input        phy_rst_n                 ,
   inout        phy_mdio                  ,
   output       phy_mdc                   ,
-  // Clock
+// 时钟接口
   inout        clk_sda1                  ,
   inout        clk_scl1                  ,
-  // RF Frontend
+// 射频前端
   output       rffe_ad9866_rst_n         ,
   output [5:0] rffe_ad9866_tx            ,
   input  [5:0] rffe_ad9866_rx            ,
@@ -56,7 +56,7 @@ module hermeslite_core (
   output       rffe_rfsw_sel             ,
   output       rffe_ad9866_mode          ,
   output       rffe_ad9866_pga5          ,
-  // IO
+// 输入输出接口
   output       io_led_run                ,
   output       io_led_tx                 ,
   output       io_led_adc75              ,
@@ -82,9 +82,9 @@ module hermeslite_core (
   output       io_atu_req                ,
   output       pa_inttr                  ,
   output       pa_exttr                  ,
-  // AK4951
-  output       pa_exttr_clone            , // AK4951 Companion Board V3
-  input        io_ptt_in                 , // AK4951 Companion Board V3
+// AK4951 音频编解码器
+// AK4951 音频编解码器
+// AK4951 音频编解码器
   output       i2s_pdn                   ,
   output       i2s_bck                   ,
   output       i2s_lrck                  ,
@@ -98,36 +98,36 @@ module hermeslite_core (
 );
 
 
-// PARAMETERS
+// 参数定义
 parameter       BOARD = 5;
 parameter       IP = {8'd0,8'd0,8'd0,8'd0};
 parameter       MAC = {8'h00,8'h1c,8'hc0,8'ha2,8'h13,8'hdd};
-parameter       NR = 4; // Recievers
-parameter       NT = 1; // Transmitters
+parameter       NR = 4; // 接收器 (Recievers)
+parameter       NT = 1; // 发射器 (Transmitters)
 parameter       CLK_FREQ = 76800000;
 
-// UART Type 0 is none, 1 is JI1UDD HR50
+// UART 类型：0=无，1=JI1UDD HR50
 parameter       UART = 0;
 
-// ATU Type 0 is none, 1 is JI1UDD ATU
+// ATU 类型：0=无，1=JI1UDD ATU
 parameter       ATU = 0;
 
-parameter       FAN = 0;    // Generate fan support
-parameter       PSSYNC = 0; // Generate power supply sync frequency
+parameter       FAN = 0;    // 生成风扇支持
+parameter       PSSYNC = 0; // 生成电源同步频率
 
-parameter       CW = 0; // CW Support
+parameter       CW = 0; // CW（等幅报）支持
 
-// Downstream audio channel usage:
-//   0=not used, 1=predistortion, 2=TX envelope PWM
-//   when using the TX envelope PWM reduce the number of receivers (NR) above by 1
+// 下行音频通道用途：
+//   0=未使用，1=预失真，2=TX 包络 PWM
+//   使用 TX 包络 PWM 时，需将上方接收器数量 (NR) 减 1
 parameter       LRDATA = 0;
 
-// Use ASMII for EEPROM configuration
+// 使用 ASMII 进行 EEPROM 配置
 parameter       ASMII = 0;
 
 parameter       HL2LINK = 0;
 
-parameter       FAST_LNA = 0; // Support for fast LNA setting, TX/RX values
+parameter       FAST_LNA = 0; // 支持快速 LNA 设置，TX/RX 值
 
 parameter       AK4951 = 0;
 parameter       EXTENDED_RESP = 1;
@@ -338,7 +338,7 @@ assign debug_out = {cmd_rqst_ad9866,debug[2],link_error,debug[0]};
 
 
 /////////////////////////////////////////////////////
-// Clocks
+// 时钟系统
 
 ethpll ethpll_inst (
     .inclk0   (phy_clk125),   //  refclk.clk
@@ -921,7 +921,7 @@ radio_i
 
 
 ///////////////////////////////////////////////
-// IO clock domain
+// 输入输出接口
 
 
 // clk_ctrl at 2.5MHz, 1Gbs ethernet at 125 MHz, implies 50 ethernet ticks
@@ -935,7 +935,7 @@ sync_pulse #(.DEPTH(2)) syncio_cmd_rqst (
   .sig_out(cmd_rqst_io)
 );
 
-// Clocks are really synchronous so save time
+// 时钟系统
 sync_pulse #(.DEPTH(2)) syncio_rqst_io (
   .clock(clk_ctrl),
   .sig_in(resp_rqst),
@@ -1039,7 +1039,7 @@ control #(
   .rffe_ad9866_sclk   (rffe_ad9866_sclk           ),
   .rffe_ad9866_sen_n  (rffe_ad9866_sen_n          ),
   
-  // Power
+// 电源控制
   .pwr_clk3p3         (pwr_clk3p3                 ),
   .pwr_clk1p2         (pwr_clk1p2                 ),
   .pwr_envpa          (pwr_envpa                  ),
@@ -1067,7 +1067,7 @@ control #(
   .scl3_o             (scl3_o                     ),
   .scl3_t             (scl3_t                     ),
   
-  // IO
+// 输入输出接口
   .io_led_run         (io_led_run                 ),
   .io_led_tx          (io_led_tx                  ),
   .io_led_adc75       (io_led_adc75               ),
@@ -1298,14 +1298,14 @@ if (AK4951 == 1) begin
     .cmd_data(cmd_data),
     .cmd_rqst(cmd_rqst_ad9866),            // cmd_cnt ; ad9866sync
 
-    .i2s_pdn(i2s_pdn),                     // AK4951 i/o pins (I2S)
+// AK4951 音频编解码器
     .i2s_bck(i2s_bck),
     .i2s_lrck(i2s_lrck),
     .i2s_mosi(i2s_mosi),
     .i2s_miso(i2s_miso)
   );
 
-  assign pa_exttr_clone = pa_exttr ; // AK4951 Companion Board V3
+// AK4951 音频编解码器
 
 
 end else begin

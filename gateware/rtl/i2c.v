@@ -250,7 +250,7 @@ always @* begin
     end
 
     STATE_CL2ON0: begin
-      icmd_reg_val = {8'h62, 8'h3b}; // Clock2 CMOS1 output and 3.3V
+      icmd_reg_val = {8'h62, 8'h3b}; // 时钟接口2 CMOS1 output and 3.3V
       if (ready) begin
           icmd_rqst = 1'b1;
           state_next = STATE_CL2ON1;
@@ -426,7 +426,7 @@ always @* begin
     end
 
 //////////////////////////////
-// AK4951 Init sequence
+// AK4951 音频编解码器 Init sequence
 `ifdef AK4951
     STATE_AK4951S0: begin
       icmd_reg_val = {8'hxx, 8'hxx}; // Wait

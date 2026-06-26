@@ -21,13 +21,13 @@
 // the Hermes-Lite hardware described at http://github.com/softerhardware/Hermes-Lite2.
 
 module hermeslite (
-  // Power
+  // 电源控制
   output       pwr_clk3p3           ,
   output       pwr_clk1p2           ,
   output       pwr_envpa            ,
   output       pwr_envop            ,
   output       pwr_envbias          ,
-  // Ethernet PHY
+  // 以太网 PHY
   input        phy_clk125           ,
   output [3:0] phy_tx               ,
   output       phy_tx_en            ,
@@ -38,11 +38,11 @@ module hermeslite (
   input        phy_rst_n            ,
   inout        phy_mdio             ,
   output       phy_mdc              ,
-  // Clock
+  // 时钟接口
   output       io_db1_1             ,
   inout        clk_sda1             ,
   inout        clk_scl1             ,
-  // RF Frontend
+  // 射频前端
   output       rffe_ad9866_rst_n    ,
   output [5:0] rffe_ad9866_tx       ,
   input  [5:0] rffe_ad9866_rx       ,
@@ -57,7 +57,7 @@ module hermeslite (
   output       rffe_rfsw_sel        ,
   output       rffe_ad9866_mode     ,
   output       rffe_ad9866_pga5     ,
-  // IO
+  // 输入输出接口
   output       io_led_d2            ,
   output       io_led_d3            ,
   output       io_led_d4            ,

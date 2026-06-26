@@ -37,7 +37,7 @@ module radioberry (
 	output 			io_pa_exttr,
 	output       	io_pa_inttr,
 	
-	// Power
+	// 电源控制
 	output			io_pwr_envpa,
 	output			io_pwr_envbias,
 	

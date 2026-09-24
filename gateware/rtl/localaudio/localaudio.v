@@ -36,7 +36,7 @@ module localaudio (
   input  [31:0]  cmd_data,
   input          cmd_rqst,
 
-  output         i2s_pdn,         // AK4951 i/o pins (I2S)
+  output         i2s_pdn,         // AK4951 音频编解码器 i/o pins (I2S)
   output         i2s_bck,
   output         i2s_lrck,
   output         i2s_mosi,
@@ -89,7 +89,7 @@ module localaudio (
   // -----------------------
   //  AK4951 interface
   // -----------------------
-  assign i2s_pdn  = ~clk_i2c_rst;   // AK4951 PDN ; active "L"
+  assign i2s_pdn  = ~clk_i2c_rst;   // AK4951 音频编解码器 PDN ; active "L"
 
   i2s_ak4951 i2s_i (
     .clk(clk),

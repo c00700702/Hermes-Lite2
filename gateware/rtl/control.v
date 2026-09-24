@@ -44,7 +44,7 @@ module control (
   input        signed [15:0] debug              ,
   output logic               hl2link_rst_req    ,
   input                      hl2link_rst_ack    ,
-  // Power
+  // 电源控制
   output logic               pwr_clk3p3           = 1'b0,
   output logic               pwr_clk1p2           = 1'b0,
   output                     pwr_envpa          ,
@@ -68,7 +68,7 @@ module control (
   input                      scl3_i             ,
   output                     scl3_o             ,
   output                     scl3_t             ,
-  // IO
+  // 输入输出接口
   output                     io_led_run         ,
   output                     io_led_tx          ,
   output                     io_led_adc75       ,
@@ -660,7 +660,7 @@ generate case (FAN)
     localparam FREQ_23MHZ = 10'h015e;	// 22.9376  MHZ
     localparam FREQ_25MHZ = 10'h017e;	// 25.0348  MHz
 	
-	  localparam DAC_VOLT   = 3300;		// Power voltage in mV
+	  localparam DAC_VOLT   = 3300;		// 电源控制 voltage in mV
 	  localparam DAC_BITS   = 12;
    
     localparam VOLT_160M  = ( 230*(2**DAC_BITS))/DAC_VOLT;	// Band voltage required in mV

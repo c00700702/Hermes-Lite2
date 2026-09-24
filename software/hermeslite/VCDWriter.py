@@ -403,7 +403,7 @@ class VCDWriter:
         if self._closed:
             raise VCDPhaseError('Cannot change value after close()')
 
-        # Format value early to catch any errors before writing output.
+        # Format 值 early to catch any errors before writing 输出.
         if value != var.value or var.type == VarType.event:
             val_str = var.format_value(value, self._check_values)
         else:
@@ -574,13 +574,13 @@ class Variable(Generic[ValueType]):
     __slots__ = ('ident', 'type', 'size', 'value')
 
     def __init__(self, ident: str, type: VarType, size: VariableSize, init: ValueType):
-        #: Identifier used in VCD output stream.
+        #: Identifier used in VCD 输出 stream.
         self.ident = ident
-        #: VCD variable type; one of :const:`VCDWriter.VAR_TYPES`.
+        #: VCD variable 类型; one of :const:`VCDWriter.VAR_TYPES`.
         self.type = type
-        #: Size, in bits, of variable.
+        #: 大小, in bits, of variable.
         self.size = size
-        #: Last value of variable.
+        #: Last 值 of variable.
         self.value = init
 
     def format_value(self, value: ValueType, check: bool = True) -> str:
@@ -756,7 +756,7 @@ class CompoundVectorVariable(Variable[CompoundValue]):
                 f'Compound value ({value}) must be length {len(self.size)}'
             )
         # The string is built-up right-to-left in order to minimize/avoid left-extension
-        # in the final value string.
+        # in the final 值 string.
         vstr_list: List[str] = []
         vstr_len = 0
         size_sum = 0

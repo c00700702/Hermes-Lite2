@@ -1,94 +1,106 @@
 
-//  Hermes Lite
+//  Hermes Lite - 赫耳墨斯轻型软件定义无线电
 //
+//  本程序是自由软件；您可以根据自由软件基金会发布的 GNU 通用公共许可证
+//  第 2 版或（根据您的选择）任何更高版本的条款重新分发和/或修改它。
 //
-//  This program is free software; you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation; either version 2 of the License, or
-//  (at your option) any later version.
+//  本程序的发布是希望它有用，但不提供任何担保；甚至没有适销性或
+//  特定用途适用性的暗示担保。有关详细信息，请参阅 GNU 通用公共许可证。
 //
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with this program; if not, write to the Free Software
-//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//  您应该已经收到一份 GNU 通用公共许可证的副本；如果没有，请写信给：
+//  Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // (C) Steve Haynal KF7O 2014-2019
-// This RTL originated from www.openhpsdr.org and has been modified to support
-// the Hermes-Lite hardware described at http://github.com/softerhardware/Hermes-Lite2.
+// 此 RTL 代码源自 www.openhpsdr.org，并已修改以支持
+// Hermes-Lite 硬件，详见 http://github.com/softerhardware/Hermes-Lite2。
 
+// 模块名称：hermeslite
+// 功能描述：Hermes-Lite SDR 顶层模块，实例化核心模块并连接所有外部接口
+// 主要接口：
+//   - 电源控制输出
+//   - 以太网 PHY 接口（RG MII）
+//   - 时钟管理 I2C 接口
+//   - RF 前端 AD9866 芯片接口
+//   - LED 指示灯
+//   - IO 扩展接口（UART、I2C、CW 键等）
 module hermeslite (
-  // Power
-  output       pwr_clk3p3           ,
-  output       pwr_clk1p2           ,
-  output       pwr_envpa            ,
-  output       pwr_envop            ,
-  output       pwr_envbias          ,
-  // Ethernet PHY
-  input        phy_clk125           ,
-  output [3:0] phy_tx               ,
-  output       phy_tx_en            ,
-  output       phy_tx_clk           ,
-  input  [3:0] phy_rx               ,
-  input        phy_rx_dv            ,
-  input        phy_rx_clk           ,
-  input        phy_rst_n            ,
-  inout        phy_mdio             ,
-  output       phy_mdc              ,
-  // Clock
-  output       io_db1_1             ,
-  inout        clk_sda1             ,
-  inout        clk_scl1             ,
-  // RF Frontend
-  output       rffe_ad9866_rst_n    ,
-  output [5:0] rffe_ad9866_tx       ,
-  input  [5:0] rffe_ad9866_rx       ,
-  input        rffe_ad9866_rxsync   ,
-  input        rffe_ad9866_rxclk    ,
-  output       rffe_ad9866_txquiet_n,
-  output       rffe_ad9866_txsync   ,
-  output       rffe_ad9866_sdio     ,
-  output       rffe_ad9866_sclk     ,
-  output       rffe_ad9866_sen_n    ,
-  input        rffe_ad9866_clk76p8  ,
-  output       rffe_rfsw_sel        ,
-  output       rffe_ad9866_mode     ,
-  output       rffe_ad9866_pga5     ,
-  // IO
-  output       io_led_d2            ,
-  output       io_led_d3            ,
-  output       io_led_d4            ,
-  output       io_led_d5            ,
-  //
-  input  [1:0] io_link_rx           ,
-  output [1:0] io_link_tx           ,
-  //
-  input        io_cn8               ,
-  input        io_cn9               ,
-  input        io_cn10              ,
-  //
-  inout        io_adc_scl           ,
-  inout        io_adc_sda           ,
-  inout        io_scl2              ,
-  inout        io_sda2              ,
-  //
-  input        io_db1_2             ,
-  output       io_db1_3             ,
-  output       io_db1_4             ,
-  input        io_db1_5             ,
-  output       io_db1_6             ,
-  input        io_phone_tip         ,
-  input        io_phone_ring        ,
-  input        io_tp2               ,
-  input        io_tp7               ,
-  input        io_tp8               ,
-  input        io_tp9               ,
-  //
-  output       pa_inttr             ,
-  output       pa_exttr
+  // ========== 电源管理输出 ==========
+  output       pwr_clk3p3           ,  // 3.3V 时钟电源使能
+  output       pwr_clk1p2           ,  // 1.2V 时钟电源使能
+  output       pwr_envpa            ,  // PA 包络电源使能
+  output       pwr_envop            ,  // 操作包络电源使能
+  output       pwr_envbias          ,  // 偏置包络电源使能
+  
+  // ========== 以太网 PHY 接口（RG MII 模式） ==========
+  input        phy_clk125           ,  // 125MHz 参考时钟输入
+  output [3:0] phy_tx               ,  // RGMII 发送数据 [3:0]
+  output       phy_tx_en            ,  // RGMII 发送使能
+  output       phy_tx_clk           ,  // RGMII 发送时钟
+  input  [3:0] phy_rx               ,  // RGMII 接收数据 [3:0]
+  input        phy_rx_dv            ,  // RGMII 接收数据有效
+  input        phy_rx_clk           ,  // RGMII 接收时钟
+  input        phy_rst_n            ,  // PHY 复位（低电平有效）
+  inout        phy_mdio             ,  // MDIO 管理数据 IO
+  output       phy_mdc              ,  // MDIO 管理时钟
+  
+  // ========== 时钟管理模块 I2C 接口 ==========
+  output       io_db1_1             ,  // DB1 连接器引脚 1（TX 包络 PWM 输出）
+  inout        clk_sda1             ,  // 时钟芯片 I2C 数据线
+  inout        clk_scl1             ,  // 时钟芯片 I2C 时钟线
+  
+  // ========== RF 前端 AD9866 收发器芯片接口 ==========
+  output       rffe_ad9866_rst_n    ,  // AD9866 复位（低电平有效）
+  output [5:0] rffe_ad9866_tx       ,  // AD9866 发送数据 [5:0]
+  input  [5:0] rffe_ad9866_rx       ,  // AD9866 接收数据 [5:0]
+  input        rffe_ad9866_rxsync   ,  // AD9866 接收帧同步
+  input        rffe_ad9866_rxclk    ,  // AD9866 接收时钟
+  output       rffe_ad9866_txquiet_n,// AD9866 发送静噪控制（低电平有效）
+  output       rffe_ad9866_txsync   ,  // AD9866 发送帧同步
+  output       rffe_ad9866_sdio     ,  // AD9866 SPI 数据 IO
+  output       rffe_ad9866_sclk     ,  // AD9866 SPI 时钟
+  output       rffe_ad9866_sen_n    ,  // AD9866 SPI 片选（低电平有效）
+  input        rffe_ad9866_clk76p8  ,  // AD9866 76.8MHz 时钟输入
+  output       rffe_rfsw_sel        ,  // RF 开关选择控制
+  output       rffe_ad9866_mode     ,  // AD9866 模式控制
+  output       rffe_ad9866_pga5     ,  // AD9866 PGA5 增益控制
+  
+  // ========== LED 指示灯输出 ==========
+  output       io_led_d2            ,  // D2 LED（运行状态指示）
+  output       io_led_d3            ,  // D3 LED（TX 活动指示）
+  output       io_led_d4            ,  // D4 LED（ADC 75% 过载指示）
+  output       io_led_d5            ,  // D5 LED（ADC 100% 过载指示）
+  
+  // ========== HL2Link 差分串行接口 ==========
+  input  [1:0] io_link_rx           ,  // HL2Link 接收差分对
+  output [1:0] io_link_tx           ,  // HL2Link 发送差分对
+  
+  // ========== 数字输入信号 ==========
+  input        io_cn8               ,  // CN8 连接器输入（TX 抑制）
+  input        io_cn9               ,  // CN9 连接器输入（HL2 ID 检测）
+  input        io_cn10              ,  // CN10 连接器输入（备用 MAC 地址选择）
+  
+  // ========== I2C 总线接口 ==========
+  inout        io_adc_scl           ,  // ADC 相关 I2C 时钟线
+  inout        io_adc_sda           ,  // ADC 相关 I2C 数据线
+  inout        io_scl2              ,  // 扩展 I2C 时钟线 2
+  inout        io_sda2              ,  // 扩展 I2C 数据线 2
+  
+  // ========== DB1 连接器及其他 IO ==========
+  input        io_db1_2             ,  // DB1 引脚 2（UART RX）
+  output       io_db1_3             ,  // DB1 引脚 3（UART TX）
+  output       io_db1_4             ,  // DB1 引脚 4（风扇 PWM 输出）
+  input        io_db1_5             ,  // DB1 引脚 5（ATU 确认）
+  output       io_db1_6             ,  // DB1 引脚 6（ATU 请求）
+  input        io_phone_tip         ,  // 耳机 Tip 检测输入
+  input        io_phone_ring        ,  // 耳机 Ring 检测输入
+  input        io_tp2               ,  // 测试点 TP2 输入
+  input        io_tp7               ,  // 测试点 TP7 输入
+  input        io_tp8               ,  // 测试点 TP8 输入
+  input        io_tp9               ,  // 测试点 TP9 输入
+  
+  // ========== 功放（PA）控制输出 ==========
+  output       pa_inttr             ,  // 内部功放松弛控制
+  output       pa_exttr             // 外部功放松弛控制
 );
 
 

@@ -44,7 +44,7 @@ module radioberry (
 	output 			pi_cwl,
 	output 			pi_cwr,
 	
-	// Power
+	// 电源控制
 	output			io_pwr_envpa,
 	output			io_pwr_envbias
 );

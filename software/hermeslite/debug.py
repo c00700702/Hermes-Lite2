@@ -65,7 +65,7 @@ class debug(object):
 
     #f = lambda r: ((r.rem[3] & 0xc0) << 2) | r.rem[2]
     #i = f(resp)
-    #v = wr.register_var('hl','cw_hang_time','integer',size=11,init=i)
+    #v = wr.register_var('hl','cw_hang_time','integer',大小=11,init=i)
     #vals.append( (f,i,v) )
 
     f = lambda r: r.rem[3] & 0x1f
@@ -80,22 +80,22 @@ class debug(object):
 
     #f = lambda r: r.ext_cw_key
     #i = f(resp)
-    #v = wr.register_var('hl','ext_cw_key','wire',size=1,init=i)
+    #v = wr.register_var('hl','ext_cw_key','wire',大小=1,init=i)
     #vals.append( (f,i,v) )
 
     #f = lambda r: r.ptt_resp
     #i = f(resp)
-    #v = wr.register_var('hl','ptt_resp','wire',size=1,init=i)
+    #v = wr.register_var('hl','ptt_resp','wire',大小=1,init=i)
     #vals.append( (f,i,v) )
 
     #f = lambda r: r.pa_exttr
     #i = f(resp)
-    #v = wr.register_var('hl','pa_exttr','wire',size=1,init=i)
+    #v = wr.register_var('hl','pa_exttr','wire',大小=1,init=i)
     #vals.append( (f,i,v) )
 
     #f = lambda r: r.pa_inttr
     #i = f(resp)
-    #v = wr.register_var('hl','pa_inttr','wire',size=1,init=i)
+    #v = wr.register_var('hl','pa_inttr','wire',大小=1,init=i)
     #vals.append( (f,i,v) )
 
     f = lambda r: r.tx_on
@@ -110,7 +110,7 @@ class debug(object):
 
     #f = lambda r: r.cw_on
     #i = f(resp)
-    #v = wr.register_var('hl','cw_on','wire',size=1,init=i)
+    #v = wr.register_var('hl','cw_on','wire',大小=1,init=i)
     #vals.append( (f,i,v) )
 
     f = lambda r: r.txfifo_recovery

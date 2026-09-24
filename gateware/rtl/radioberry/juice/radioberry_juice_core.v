@@ -35,7 +35,7 @@ module radioberry_juice_core(
 	output 			io_pa_exttr,
 	output       	io_pa_inttr,
 	
-	// Power
+	// 电源控制
 	output			io_pwr_envpa,
 	output			io_pwr_envbias,
 	
@@ -44,15 +44,15 @@ module radioberry_juice_core(
 	inout        	io_sda
 );
 
-// PARAMETERS
-parameter       NR = 4; // Receivers
-parameter       NT = 1; // Transmitters
+// 参数定义
+parameter       NR = 4; // 接收器
+parameter       NT = 1; // 发射器
 parameter       CLK_FREQ = 76800000;
 parameter       UART = 0;
 parameter       ATU = 0;
-parameter       FAN = 0;    // Generate fan support
+parameter       FAN = 0;    // 生成风扇支持
 parameter       VNA = 0;
-parameter       CW = 0; // CW Support
+parameter       CW = 0; // CW（等幅报）支持
 parameter       FAST_LNA = 0; 
 parameter       AK4951 = 0; 
 parameter       DSIQ_FIFO_DEPTH = 16384;

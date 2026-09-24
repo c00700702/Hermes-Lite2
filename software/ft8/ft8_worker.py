@@ -15,7 +15,7 @@ def worker(index,server):
     j = s.recv_job(copy=False)
     ft8spots = j.decode()
     ps.send_pyobj(ft8spots)
-    #print("Worker {0} done".format(index))
+    #print("Worker {0} done".format(索引))
 
 
 
